@@ -1,6 +1,6 @@
 import 'package:dog_catcher/core/fonts.dart';
-import 'package:dog_catcher/presentation/pages/chat/chat_rooms.dart';
 import 'package:dog_catcher/presentation/pages/notifcation/notification_page.dart';
+import 'package:dog_catcher/presentation/pages/report/add_report_page.dart';
 import 'package:flutter/material.dart';
 
 AppBar customAppBar(
@@ -27,9 +27,9 @@ AppBar customAppBar(
       IconButton(
           onPressed: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ChatRooms()));
+                .push(MaterialPageRoute(builder: (context) => AddReportPage()));
           },
-          icon: Icon(Icons.chat)),
+          icon: Icon(Icons.report_problem)),
       SizedBox(
         width: 15,
       )
