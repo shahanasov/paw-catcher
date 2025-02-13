@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:dog_catcher/core/theme.dart';
+import 'package:dog_catcher/data/services/auth_service.dart';
 import 'package:dog_catcher/presentation/auth/widgets/widgets.dart';
 import 'package:dog_catcher/presentation/on_boarding/widgets.dart';
+import 'package:dog_catcher/presentation/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +15,7 @@ class SignUpScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController controller = TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    TextEditingController confirmPasswordController = TextEditingController();
     List<Widget> widgetsList = [
       Text(
         'Sign Up',
@@ -31,14 +36,6 @@ class SignUpScreen extends ConsumerWidget {
         height: 10,
       ),
       Text(
-        'Name',
-        style: TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-      textfield(controller: controller, hint: 'Your Name'),
-      Text(
         'Email',
         style: TextStyle(
           fontSize: 16.0,
@@ -54,13 +51,35 @@ class SignUpScreen extends ConsumerWidget {
         ),
       ),
       passwordfield(controller: passwordController, ref: ref),
+      Text(
+        'Confirm Password',
+        style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      textfield(controller: confirmPasswordController, hint: 'Confirm password'),
       SizedBox(
         height: 10,
       ),
-      Center(child: buttonforAll(onPressed: (){
-        
-      },
-        context: context, hint: 'Register')),
+      Center(
+          child: buttonforAll(
+              onPressed: () {
+                AuthService()
+                    .signUp(
+                        email: controller.text.trim(),
+                        password: passwordController.text.trim())
+                    .then((user) {
+                  if (context.mounted) {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => HomePage()));
+                  }
+                }).catchError((error) {
+                  log("Error $error");
+                });
+              },
+              context: context,
+              hint: 'Register')),
       optsign(context, false),
     ];
     return Scaffold(

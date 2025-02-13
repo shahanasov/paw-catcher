@@ -4,7 +4,7 @@ import 'package:dog_catcher/core/theme.dart';
 import 'package:dog_catcher/data/services/auth_service.dart';
 import 'package:dog_catcher/presentation/auth/widgets/widgets.dart';
 import 'package:dog_catcher/presentation/on_boarding/widgets.dart';
-import 'package:dog_catcher/presentation/pages/Home/home.dart';
+import 'package:dog_catcher/presentation/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

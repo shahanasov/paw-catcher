@@ -1,8 +1,8 @@
 import 'package:dog_catcher/presentation/on_boarding/widgets.dart';
 import 'package:flutter/material.dart';
 
-class Onboarding extends StatelessWidget {
-  const Onboarding({super.key});
+class OnBoarding extends StatelessWidget {
+  const OnBoarding({super.key});
 
   @override
   Widget build(BuildContext context) {

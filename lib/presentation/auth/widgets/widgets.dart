@@ -23,18 +23,18 @@ Widget optsign(BuildContext context, bool have) {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(have ? "Don't have an account?" : "Have an account?"),
-      TextButton(
-        child: Text(
-          have ? 'Sign Up' : "Sign In",
-          style: TextStyle(color: AppTheme().softPink),
-        ),
-        onPressed: () {
+      GestureDetector(
+        onTap: () {
           have
               ? Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => SignUpScreen()))
+                  .pushReplacement(MaterialPageRoute(builder: (context) => SignUpScreen()))
               : Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => SignInScreen()));
         },
+        child: Text(
+          have ? '  Sign Up' : "  Sign In",
+          style: TextStyle(color: AppTheme().softPink),
+        ),
       )
     ],
   );

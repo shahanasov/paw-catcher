@@ -1,3 +1,7 @@
+import 'package:dog_catcher/core/theme.dart';
+import 'package:dog_catcher/presentation/pages/home/widgets/appbar.dart';
+import 'package:dog_catcher/presentation/pages/home/widgets/draggable_scrollable_sheet.dart';
+import 'package:dog_catcher/presentation/pages/home/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -5,8 +9,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('.s..s....s..s.s.s.s..s.s.'),),
-    );
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    return Scaffold(
+        key: scaffoldKey,
+        appBar: customAppBar(scaffoldKey,context),
+        drawer: drawer(),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Container(
+              color: AppTheme().softPink,
+            ),
+            CostumDraggableScrollableSheet()
+          ],
+        ));
   }
 }
