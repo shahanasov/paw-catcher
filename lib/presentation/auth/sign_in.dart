@@ -13,6 +13,7 @@ class SignInScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+     final isLoading = ref.watch(authLoadingProvider);
     TextEditingController controller = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     List<Widget> widgetsList = [
@@ -52,10 +53,11 @@ class SignInScreen extends ConsumerWidget {
         height: 3,
       ),
       Center(
-        child: buttonforAll(
+        child: isLoading? CircularProgressIndicator(color: AppTheme().softPink,):
+        buttonforAll(
             onPressed: () {
-              AuthService()
-                  .signInWithEmail(
+              
+                  signInWithEmail(ref: ref,
                       email: controller.text.trim(),
                       password: passwordController.text.trim())
                   .then((user) {

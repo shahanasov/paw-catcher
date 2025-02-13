@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         key: scaffoldKey,
         appBar: customAppBar(scaffoldKey,context),
-        drawer: drawer(context),
+        drawer: CustomDrawer(),
         body: Stack(
           fit: StackFit.expand,
           children: [
