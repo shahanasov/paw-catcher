@@ -13,9 +13,10 @@ class SignUpScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(authLoadingProvider);
     TextEditingController controller = TextEditingController();
     TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
     List<Widget> widgetsList = [
       Text(
         'Sign Up',
@@ -36,6 +37,17 @@ class SignUpScreen extends ConsumerWidget {
         height: 10,
       ),
       Text(
+        'Name',
+        style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      textfield(controller: nameController, hint: 'Your Name'),
+      SizedBox(
+        height: 10,
+      ),
+      Text(
         'Email',
         style: TextStyle(
           fontSize: 16.0,
@@ -51,35 +63,32 @@ class SignUpScreen extends ConsumerWidget {
         ),
       ),
       passwordfield(controller: passwordController, ref: ref),
-      Text(
-        'Confirm Password',
-        style: TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-      textfield(controller: confirmPasswordController, hint: 'Confirm password'),
       SizedBox(
         height: 10,
       ),
       Center(
-          child: buttonforAll(
-              onPressed: () {
-                AuthService()
-                    .signUp(
-                        email: controller.text.trim(),
-                        password: passwordController.text.trim())
-                    .then((user) {
-                  if (context.mounted) {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                  }
-                }).catchError((error) {
-                  log("Error $error");
-                });
-              },
-              context: context,
-              hint: 'Register')),
+          child: isLoading
+              ? CircularProgressIndicator(
+                  color: AppTheme().softPink,
+                )
+              : buttonforAll(
+                  onPressed: () {
+                    signUp(
+                            ref: ref,
+                            name: nameController.text.trim(),
+                            email: controller.text.trim(),
+                            password: passwordController.text.trim())
+                        .then((user) {
+                      if (context.mounted) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => HomePage()));
+                      }
+                    }).catchError((error) {
+                      log("Error $error");
+                    });
+                  },
+                  context: context,
+                  hint: 'Register')),
       optsign(context, false),
     ];
     return Scaffold(
