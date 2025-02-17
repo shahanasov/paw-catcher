@@ -1,5 +1,7 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dog_catcher/core/theme.dart';
-import 'package:dog_catcher/presentation/pages/detail_page/detail_page.dart';
+import 'package:dog_catcher/data/services/report_services.dart';
+import 'package:dog_catcher/presentation/pages/home/widgets/reports_gridview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +14,18 @@ class CostumDraggableScrollableSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sheetHeight = ref.watch(sheetHeightProvider);
+    final reports = ref.watch(reportsProvider);
+    final connectivity = ref.watch(connectivityProvider).value;
+// !should change from here i completely block everything
+    if (connectivity == ConnectivityResult.none) {
+      return const Center(
+        child: Text(
+          "No internet connection",
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+        ),
+      );
+    }
     return DraggableScrollableSheet(
         expand: true,
         initialChildSize: sheetHeight, // 30% of screen height initially
@@ -55,66 +69,28 @@ class CostumDraggableScrollableSheet extends ConsumerWidget {
                   height: 20,
                 ),
                 Expanded(
-                  child: GridView.builder(
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.8, crossAxisCount: 2),
-                      controller: scrollController,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => DetailPage()));
-                          },
-                          child: SizedBox(
-                              height: 450,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  spacing: 3,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: AppTheme().softPink,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      height: 80,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('place'),
-                                        Text('time ago')
-                                      ],
-                                    ),
-                                    Text(
-                                      'report..............................',
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5,),
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                         height: 25,
-                                         width: 90,
-                                          decoration: BoxDecoration(
-                                            color: AppTheme().safeGreen,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                                
-                                          ),
-                                          child: Center(
-                                            child: Text('progress'),
-                                          )),
-                                    )
-                                  ],
-                                ),
-                              )),
-                        );
-                      }),
+                  child: reports.when(
+                      data: (reportsList) {
+                        if (reportsList.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              "No reports available",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey),
+                            ),
+                          );
+                        }
+                        return CustomGrid(reportsList: reportsList,scrollController:scrollController);
+                      },
+                      error: (err, stack) => Center(child: Text("Error: $err")),
+
+                      loading: () => Center(
+                            child: CircularProgressIndicator(
+                              color: AppTheme().softPink,
+                            ),
+                          )),
                 )
               ],
             ),
