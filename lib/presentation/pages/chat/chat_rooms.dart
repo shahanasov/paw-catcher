@@ -7,7 +7,7 @@ class ChatRooms extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('chatrooms'),
+        child: Text('chat'),
       ),
     );
   }
