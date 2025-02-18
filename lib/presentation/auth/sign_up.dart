@@ -26,7 +26,7 @@ class SignUpScreen extends ConsumerWidget {
         ),
       ),
       Text(
-        'Create account and choose favorite menu',
+        'Create account',
         style: TextStyle(
           color: AppTheme().softPink,
           fontSize: 16.0,
@@ -44,9 +44,6 @@ class SignUpScreen extends ConsumerWidget {
         ),
       ),
       textfield(controller: nameController, hint: 'Your Name'),
-      SizedBox(
-        height: 10,
-      ),
       Text(
         'Email',
         style: TextStyle(

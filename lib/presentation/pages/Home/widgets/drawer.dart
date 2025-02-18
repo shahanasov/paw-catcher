@@ -84,14 +84,14 @@ class CustomDrawer extends ConsumerWidget {
                             TextButton(
                                 onPressed: () {
                                   signOut();
-                                  Future.delayed(const Duration(seconds: 2),
+                                  // Future.delayed(const Duration(seconds: 2),
                                       () {
                                     navigatorContext.pushReplacement(
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const SignInScreen()),
                                     );
-                                  });
+                                  };
                                 },
                                 child: const Text('Log out'))
                           ],
