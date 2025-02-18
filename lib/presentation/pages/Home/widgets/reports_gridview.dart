@@ -1,6 +1,5 @@
 import 'package:dog_catcher/core/theme.dart';
 import 'package:dog_catcher/data/models/report_model.dart';
-import 'package:dog_catcher/data/services/report_services.dart';
 import 'package:dog_catcher/presentation/pages/detail_page/detail_page.dart';
 import 'package:flutter/material.dart';
 
@@ -26,29 +25,32 @@ class CustomGrid extends StatelessWidget {
                         reportModel: report,
                       )));
             },
-            child: SizedBox(
-                height: 450,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    spacing: 3,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppTheme().softPink,
-                            borderRadius: BorderRadius.circular(10)),
-                        height: 150,
-                      ),
-                      Text(
-                        maxLines: 1,
-                        report.title,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      // GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                spacing: 3,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppTheme().softPink,
+                        borderRadius: BorderRadius.circular(10)),
+                    height: 150,
+                  ),
+                  Text(
+                    maxLines: 1,
+                    report.title,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}
+
+// GestureDetector(
                       //   onTap: () {},
                       //   child: Container(
                       //       height: 25,
@@ -61,10 +63,3 @@ class CustomGrid extends StatelessWidget {
                       //         child: Text('progress'),
                       //       )),
                       // )
-                    ],
-                  ),
-                )),
-          );
-        });
-  }
-}
