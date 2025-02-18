@@ -1,7 +1,7 @@
-import 'package:dog_catcher/core/theme.dart';
 import 'package:dog_catcher/presentation/pages/home/widgets/appbar.dart';
 import 'package:dog_catcher/presentation/pages/home/widgets/draggable_scrollable_sheet.dart';
 import 'package:dog_catcher/presentation/pages/home/widgets/drawer.dart';
+import 'package:dog_catcher/presentation/pages/home/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,16 +12,11 @@ class HomePage extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
         key: scaffoldKey,
-        appBar: customAppBar(scaffoldKey,context),
+        appBar: customAppBar(scaffoldKey, context),
         drawer: CustomDrawer(),
         body: Stack(
           fit: StackFit.expand,
-          children: [
-            Container(
-              color: AppTheme().softPink,
-            ),
-            CostumDraggableScrollableSheet()
-          ],
+          children: [MyGoogleMap(), CostumDraggableScrollableSheet()],
         ));
   }
 }
