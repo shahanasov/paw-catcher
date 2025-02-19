@@ -27,9 +27,14 @@ class MyGoogleMap extends ConsumerWidget {
         );
       },
       loading: () {
-        return Container(color: AppTheme().softPink,child: Center(
-          child: CircularProgressIndicator(color: AppTheme().softPink,),
-        ),);
+        return Container(
+          color: AppTheme.softPink,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: AppTheme.softPink,
+            ),
+          ),
+        );
       },
       error: (error, stack) => Column(
         mainAxisAlignment: MainAxisAlignment.center,

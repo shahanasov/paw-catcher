@@ -11,14 +11,14 @@ Widget boardingpagebutton({
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           fixedSize: Size(327, 56),
-          backgroundColor: AppTheme().softPink),
+          backgroundColor: AppTheme.softPink),
       onPressed: () {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => SignInScreen()));
       },
       child: Text("Let's Go!",
           style: TextStyle(
-            color: AppTheme().textPrimary,
+            color: AppTheme.textPrimary,
           )));
 }
 
@@ -33,7 +33,7 @@ Widget passwordfield({
       obscureText: !isObscure,
       controller: controller,
       decoration: InputDecoration(
-        hintStyle: TextStyle(color: AppTheme().textSecondary),
+        hintStyle: TextStyle(color: AppTheme.textSecondary),
         suffixIcon: IconButton(
             onPressed: () {
               ref.read(passwordVisibilityProvider.notifier).state = !isObscure;
@@ -44,7 +44,7 @@ Widget passwordfield({
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none),
         filled: true,
-        fillColor: AppTheme().softPink,
+        fillColor: AppTheme.softPink,
       ),
     );
   });
@@ -61,13 +61,13 @@ Widget buttonforAll({
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
           fixedSize: Size(327, 48),
-          backgroundColor: color ?? AppTheme().softPink),
+          backgroundColor: color ?? AppTheme.softPink),
       onPressed: () {
         onPressed();
       },
       child: Text(hint ?? 'Button',
           style: TextStyle(
-            color: AppTheme().textPrimary,
+            color: AppTheme.textPrimary,
           )));
 }
 

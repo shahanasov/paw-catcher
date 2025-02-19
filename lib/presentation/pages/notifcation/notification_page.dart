@@ -7,7 +7,7 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: AppTheme().softPink,
+      backgroundColor: AppTheme.softPink,
     );
   }
 }

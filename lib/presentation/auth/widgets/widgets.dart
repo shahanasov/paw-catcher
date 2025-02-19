@@ -8,12 +8,12 @@ Widget textfield(
   return TextFormField(
     controller: controller,
     decoration: InputDecoration(
-      hintStyle: TextStyle(color: AppTheme().textSecondary),
+      hintStyle: TextStyle(color: AppTheme.textSecondary),
       hintText: hint ?? 'Type here',
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
       filled: true,
-      fillColor: AppTheme().softPink,
+      fillColor: AppTheme.softPink,
     ),
   );
 }
@@ -33,7 +33,7 @@ Widget optsign(BuildContext context, bool have) {
         },
         child: Text(
           have ? '  Sign Up' : "  Sign In",
-          style: TextStyle(color: AppTheme().softPink),
+          style: TextStyle(color: AppTheme.softPink),
         ),
       )
     ],

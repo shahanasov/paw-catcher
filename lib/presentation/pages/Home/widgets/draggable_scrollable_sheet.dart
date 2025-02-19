@@ -18,11 +18,11 @@ class CostumDraggableScrollableSheet extends ConsumerWidget {
     final connectivity = ref.watch(connectivityProvider).value;
 // !should change from here i completely block everything
     if (connectivity == ConnectivityResult.none) {
-      return const Center(
+      return  Center(
         child: Text(
           "No internet connection",
           style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+              fontSize: 16, fontWeight: FontWeight.bold, color:AppTheme.alertRed),
         ),
       );
     }
@@ -88,7 +88,7 @@ class CostumDraggableScrollableSheet extends ConsumerWidget {
 
                       loading: () => Center(
                             child: CircularProgressIndicator(
-                              color: AppTheme().softPink,
+                              color: AppTheme.softPink,
                             ),
                           )),
                 )

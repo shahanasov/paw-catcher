@@ -48,7 +48,7 @@ class AddReportPage extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: AppTheme().softPink,
+                  color: AppTheme.softPink,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 height: 180,
@@ -85,13 +85,13 @@ class AddReportPage extends ConsumerWidget {
                 maxLines: 10,
                 controller: descriptionController,
                 decoration: InputDecoration(
-                  hintStyle: TextStyle(color: AppTheme().textSecondary),
+                  hintStyle: TextStyle(color: AppTheme.textSecondary),
                   hintText: 'Type here....',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                       borderSide: BorderSide.none),
                   filled: true,
-                  fillColor: AppTheme().softPink,
+                  fillColor: AppTheme.softPink,
                 ),
               )
             ],

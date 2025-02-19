@@ -40,16 +40,16 @@ class CustomDrawer extends ConsumerWidget {
               loading: () => ListTile(
                   title: Center(
                       child: LinearProgressIndicator(
-                color: AppTheme().softPink,
+                color: AppTheme.softPink,
               ))),
               error: (err, stack) => ListTile(
                   title: Center(
                       child: LinearProgressIndicator(
-                color: AppTheme().softPink,
+                color: AppTheme.softPink,
               ))),
             ),
             Card(
-                color: AppTheme().softPink,
+                color: AppTheme.softPink,
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).push(
@@ -59,14 +59,14 @@ class CustomDrawer extends ConsumerWidget {
                   title: Text('Chat with Rescue Team'),
                 )),
             Card(
-              color: AppTheme().softPink,
+              color: AppTheme.softPink,
               child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Settings'),
               ),
             ),
             Card(
-              color: AppTheme().softPink,
+              color: AppTheme.softPink,
               child: ListTile(
                 onTap: () {
                   final navigatorContext = Navigator.of(context);
