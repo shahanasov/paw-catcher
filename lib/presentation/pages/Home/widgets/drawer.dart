@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dog_catcher/core/theme.dart';
 import 'package:dog_catcher/data/services/auth_service.dart';
 import 'package:dog_catcher/data/services/report_services.dart';
@@ -33,6 +35,7 @@ class CustomDrawer extends ConsumerWidget {
             ),
             userDetails.when(
               data: (user) {
+                log(user?.email??'');
                 return ListTile(
                   title: Text("Hi ${user?.name ?? ''} 👋"),
                 );
@@ -40,16 +43,16 @@ class CustomDrawer extends ConsumerWidget {
               loading: () => ListTile(
                   title: Center(
                       child: LinearProgressIndicator(
-                color: AppTheme().softPink,
+                color: AppTheme.softPink,
               ))),
               error: (err, stack) => ListTile(
                   title: Center(
                       child: LinearProgressIndicator(
-                color: AppTheme().softPink,
+                color: AppTheme.softPink,
               ))),
             ),
             Card(
-                color: AppTheme().softPink,
+                color: AppTheme.softPink,
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).push(
@@ -59,14 +62,14 @@ class CustomDrawer extends ConsumerWidget {
                   title: Text('Chat with Rescue Team'),
                 )),
             Card(
-              color: AppTheme().softPink,
+              color: AppTheme.softPink,
               child: ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Settings'),
               ),
             ),
             Card(
-              color: AppTheme().softPink,
+              color: AppTheme.softPink,
               child: ListTile(
                 onTap: () {
                   final navigatorContext = Navigator.of(context);

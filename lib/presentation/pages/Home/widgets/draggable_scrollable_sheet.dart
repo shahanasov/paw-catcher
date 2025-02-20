@@ -88,7 +88,7 @@ class CostumDraggableScrollableSheet extends ConsumerWidget {
 
                       loading: () => Center(
                             child: CircularProgressIndicator(
-                              color: AppTheme().softPink,
+                              color: AppTheme.softPink,
                             ),
                           )),
                 )

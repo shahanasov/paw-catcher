@@ -9,6 +9,7 @@ import 'package:dog_catcher/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geolocator/geolocator.dart';
 
 // class ReportServices {couse can't be in a class
 
@@ -54,20 +55,30 @@ Future<void> reportSave({
   required String title,
   // required String name,
   required WidgetRef ref,
+  required GeoPoint location,
 }) async {
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
+  // final geoPoint = GeoPoint(latitude, longitude);
+
   // ref.read(authLoadingProvider.notifier).state = true;
   try {
     // final imagePath = await uploadImageToFirebase(image);
     final userdetail = FirebaseFirestore.instance.collection("Reports");
-    final newReport = ReportModel(
-            // imagePath: imagePath,
-            title: title,
-            report: report,
-            auther: userId!,
-            time: DateTime.now())
-        .toJson();
-    userdetail.doc().set(newReport);
+    
+        final newReport = ReportModel(
+      location: location,
+      title: title,
+      report: report,
+      auther: userId!,
+      time: DateTime.now(),
+    );
+
+    // Save to Firestore
+    userdetail.doc().set(newReport.toJson());
+    // userdetail.doc().set(newReport);
+    // await sendNotificationToNearbyUsers(newReport);
+
+
   } catch (e) {
     log("Error $e");
   } finally {
@@ -126,3 +137,97 @@ Future<List<String>> getAllAdminIds() async {
     return [];
   }
 }
+
+//  to fetch only nearby reports
+// Fetch user location using new locationSettings approach
+// Fetch user location
+final locationProvider = FutureProvider<Position>((ref) async {
+  LocationSettings locationSettings = LocationSettings(
+    accuracy: LocationAccuracy.high,
+    distanceFilter: 10, // Min distance before an update
+  );
+
+  return await Geolocator.getCurrentPosition(
+      locationSettings: locationSettings);
+});
+
+// Fetch and filter nearby reports **without modifying ReportModel**
+final nearbyReportsProvider =
+    StreamProvider.autoDispose<List<ReportModel>>((ref) async* {
+  final position = await ref.watch(locationProvider.future);
+  const double maxDistance = 5.0; // Max distance in km
+
+  yield* FirebaseFirestore.instance
+      .collection('Reports')
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs
+        .map((doc) => ReportModel.fromSnapshot(doc))
+        .where((report) {
+      // Calculate distance dynamically
+      final distance = Geolocator.distanceBetween(
+            position.latitude,
+            position.longitude,
+            report.location.latitude,
+            report.location.longitude,
+          ) /
+          1000; // Convert meters to km
+
+
+
+      return distance <= maxDistance; // Keep only nearby reports
+    }).toList();
+  });
+});
+
+
+// final nearbyReportsProvider =
+//     StreamProvider.autoDispose<List<ReportModel>>((ref) async* {
+//   final position = await ref.watch(locationProvider.future);
+//   final notificationService = ref.read(notificationServiceProvider);
+//   const double maxDistance = 5.0;
+
+//   // Initialize notifications once
+//   await notificationService.initNotification();
+
+//   yield* FirebaseFirestore.instance
+//       .collection('Reports')
+//       .snapshots()
+//       .asyncMap((snapshot) async {
+//     // Check each document change for new reports within range
+//     for (var change in snapshot.docChanges) {
+//       if (change.type == DocumentChangeType.added) {
+//         final report = ReportModel.fromSnapshot(change.doc);
+//         final distance = Geolocator.distanceBetween(
+//               position.latitude,
+//               position.longitude,
+//               report.location.latitude,
+//               report.location.longitude,
+//             ) /
+//             1000;
+
+//         if (distance <= maxDistance) {
+//           await notificationService.showNotification(
+//             title: report.title,
+//             body: 'A new report is nearby!',
+//           );
+//         }
+//       }
+//     }
+
+//     // Return current list of nearby reports
+//     return snapshot.docs
+//         .map((doc) => ReportModel.fromSnapshot(doc))
+//         .where((report) {
+//           final distance = Geolocator.distanceBetween(
+//                 position.latitude,
+//                 position.longitude,
+//                 report.location.latitude,
+//                 report.location.longitude,
+//               ) /
+//               1000;
+//           return distance <= maxDistance;
+//         })
+//         .toList();
+//   });
+// });

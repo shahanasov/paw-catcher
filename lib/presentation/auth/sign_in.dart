@@ -27,7 +27,7 @@ class SignInScreen extends ConsumerWidget {
       Text(
         'Sign to your account',
         style: TextStyle(
-          color: AppTheme().textPrimary,
+          color: AppTheme.textPrimary,
           fontSize: 16.0,
           fontWeight: FontWeight.normal,
         ),
@@ -47,13 +47,13 @@ class SignInScreen extends ConsumerWidget {
       passwordfield(controller: passwordController, ref: ref),
       Text(
         'Forgot Password?',
-        style: TextStyle(color: AppTheme().softPink),
+        style: TextStyle(color: AppTheme.softPink),
       ),
       SizedBox(
         height: 3,
       ),
       Center(
-        child: isLoading? CircularProgressIndicator(color: AppTheme().softPink,):
+        child: isLoading? CircularProgressIndicator(color: AppTheme.softPink,):
         buttonforAll(
             onPressed: () {
               
@@ -71,7 +71,7 @@ class SignInScreen extends ConsumerWidget {
             },
             hint: 'Login',
             context: context,
-            color: AppTheme().softPink),
+            color: AppTheme.softPink),
       ),
       optsign(context, true),
       Row(

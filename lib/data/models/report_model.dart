@@ -3,37 +3,41 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ReportModel {
   String title;
   String report;
-  // String imagePath;
   String auther;
   DateTime time;
-  ReportModel(
-      {required this.title,
-      required this.report,
-      required this.auther,
-      required this.time,
-      // required this.imagePath
-      });
+  GeoPoint location;
 
-  //  Convert Firestore document snapshot to UserModel
+  ReportModel({
+    required this.title,
+    required this.report,
+    required this.auther,
+    required this.time,
+    required this.location,
+  });
+
+  // 🔹 Convert Firestore document snapshot to ReportModel
   static ReportModel fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     Timestamp timestamp = snapshot.get('time') as Timestamp;
+
     return ReportModel(
-        auther: snapshot.get('auther') as String,
-        title: snapshot.get('title') as String,
-        report: snapshot.get('report') as String,
-        // imagePath: snapshot.get('imagePath') as String,
-        time: timestamp.toDate());
+      auther: snapshot.get('auther') as String,
+      title: snapshot.get('title') as String,
+      report: snapshot.get('report') as String,
+      location: snapshot.get('location') as GeoPoint,
+      time: timestamp.toDate(),
+    );
   }
 
-  // Convert UserModel to JSON for storing in Firestore
+  // 🔹 Convert ReportModel to JSON for Firestore
   Map<String, dynamic> toJson() {
     return {
       'auther': auther,
       'title': title,
       'report': report,
-      // 'imagePath': imagePath,
-      'time': time
+      'time': time,
+      'location': location,
     };
   }
 }
+

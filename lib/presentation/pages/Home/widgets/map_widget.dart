@@ -24,11 +24,21 @@ class MyGoogleMap extends ConsumerWidget {
                   icon: BitmapDescriptor.defaultMarker,
                   position: currentPosition),
           },
+              circles: {
+              if (currentPosition != null)
+                Circle(
+                    circleId: CircleId("nearby_radius"),
+                    center: currentPosition,
+                    radius: 500,
+                    fillColor: AppTheme.yellow,
+                    strokeColor: AppTheme.yellow,
+                    strokeWidth: 1)
+            }
         );
       },
       loading: () {
-        return Container(color: AppTheme().softPink,child: Center(
-          child: CircularProgressIndicator(color: AppTheme().softPink,),
+        return Container(color: AppTheme.softPink,child: Center(
+          child: CircularProgressIndicator(color: AppTheme.softPink,),
         ),);
       },
       error: (error, stack) => Column(
