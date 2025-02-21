@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SignInScreen extends ConsumerWidget {
-  const SignInScreen({super.key});
-
+  SignInScreen({super.key});
+  final signInFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final isLoading = ref.watch(authLoadingProvider);
+    final isLoading = ref.watch(authLoadingProvider);
     TextEditingController controller = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     List<Widget> widgetsList = [
@@ -42,9 +42,16 @@ class SignInScreen extends ConsumerWidget {
           fontWeight: FontWeight.w400,
         ),
       ),
-      textfield(controller: controller, hint: 'Your email'),
+      textfield(
+        controller: controller,
+        hint: 'Your email',
+        validator: (value) => value!.isEmpty ? "Enter your Email" : null,
+      ),
       Text('Password'),
-      passwordfield(controller: passwordController, ref: ref),
+      passwordfield(
+        controller: passwordController,
+        ref: ref,
+      ),
       Text(
         'Forgot Password?',
         style: TextStyle(color: AppTheme.softPink),
@@ -53,25 +60,57 @@ class SignInScreen extends ConsumerWidget {
         height: 3,
       ),
       Center(
-        child: isLoading? CircularProgressIndicator(color: AppTheme.softPink,):
-        buttonforAll(
-            onPressed: () {
-              
-                  signInWithEmail(ref: ref,
-                      email: controller.text.trim(),
-                      password: passwordController.text.trim())
-                  .then((user) {
-                if (context.mounted) {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                }
-              }).catchError((error) {
-                log("Error $error");
-              });
-            },
-            hint: 'Login',
-            context: context,
-            color: AppTheme.softPink),
+        child: isLoading
+            ? CircularProgressIndicator(
+                color: AppTheme.softPink,
+              )
+            : buttonforAll(
+                onPressed: () async {
+                  if (signInFormKey.currentState!.validate()) {
+                    ref.read(authLoadingProvider.notifier).state = true;
+
+                    try {
+                      String? errorMessage = await signInWithEmail(
+                        ref: ref,
+                        email: controller.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
+
+                      if (errorMessage == null) {
+                        if (context.mounted) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(errorMessage),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    } catch (error) {
+                      log("Error: $error");
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Something went wrong. Please try again.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } finally {
+                      ref.read(authLoadingProvider.notifier).state = false;
+                    }
+                  }
+                },
+                hint: 'Login',
+                context: context,
+                color: AppTheme.softPink),
       ),
       optsign(context, true),
       Row(
@@ -101,10 +140,13 @@ class SignInScreen extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
-          child: Column(
-              spacing: 12,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: widgetsList),
+          child: Form(
+            key: signInFormKey,
+            child: Column(
+                spacing: 12,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widgetsList),
+          ),
         ),
       ),
     );

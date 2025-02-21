@@ -26,10 +26,12 @@ final passwordVisibilityProvider = StateProvider<bool>((ref) => false);
 Widget passwordfield({
   required TextEditingController controller,
   required WidgetRef ref,
+  String? Function(String?)? validator,
 }) {
   return Consumer(builder: (context, ref, child) {
     final isObscure = ref.watch(passwordVisibilityProvider);
     return TextFormField(
+     
       obscureText: !isObscure,
       controller: controller,
       decoration: InputDecoration(

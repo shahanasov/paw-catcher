@@ -1,7 +1,6 @@
 import 'package:dog_catcher/core/theme.dart';
-import 'package:dog_catcher/data/services/notification.dart';
 import 'package:dog_catcher/presentation/on_boarding/splash_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,7 +11,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-    FirebaseMessaging.instance.requestPermission();
+    // FirebaseMessaging.instance.requestPermission();
 
   runApp(ProviderScope(child: const MyApp()));
 }
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-void subscribeToTopic() async {
-  await FirebaseMessaging.instance.subscribeToTopic('new_reports');
-  print("Subscribed to new_reports topic");
-}
+// void subscribeToTopic() async {
+//   await FirebaseMessaging.instance.subscribeToTopic('new_reports');
+//   log("Subscribed to new_reports topic");
+// }

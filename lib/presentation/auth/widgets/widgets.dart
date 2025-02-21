@@ -4,8 +4,9 @@ import 'package:dog_catcher/presentation/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 
 Widget textfield(
-    {required TextEditingController controller, String? hint, String? label}) {
+    {required TextEditingController controller, String? hint, String? label,String? Function(String?)? validator, }) {
   return TextFormField(
+    validator: validator, 
     controller: controller,
     decoration: InputDecoration(
       hintStyle: TextStyle(color: AppTheme.textSecondary),
@@ -26,8 +27,8 @@ Widget optsign(BuildContext context, bool have) {
       GestureDetector(
         onTap: () {
           have
-              ? Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) => SignUpScreen()))
+              ? Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => SignUpScreen()))
               : Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => SignInScreen()));
         },
@@ -39,3 +40,5 @@ Widget optsign(BuildContext context, bool have) {
     ],
   );
 }
+
+
