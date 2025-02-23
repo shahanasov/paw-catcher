@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 // class ReportServices {couse can't be in a class
 
@@ -64,8 +66,10 @@ Future<void> reportSave({
   try {
     // final imagePath = await uploadImageToFirebase(image);
     final userdetail = FirebaseFirestore.instance.collection("Reports");
-    
-        final newReport = ReportModel(
+    String reportId = userdetail.doc().id;
+    final newReport = ReportModel(
+      volunteer: false,
+      reportId: reportId,
       location: location,
       title: title,
       report: report,
@@ -74,11 +78,9 @@ Future<void> reportSave({
     );
 
     // Save to Firestore
-    userdetail.doc().set(newReport.toJson());
+    userdetail.doc(reportId).set(newReport.toJson());
     // userdetail.doc().set(newReport);
     // await sendNotificationToNearbyUsers(newReport);
-
-
   } catch (e) {
     log("Error $e");
   } finally {
@@ -173,14 +175,57 @@ final nearbyReportsProvider =
           ) /
           1000; // Convert meters to km
 
-
-
       return distance <= maxDistance; // Keep only nearby reports
     }).toList();
   });
 });
 
 
+ // Fetch volunteer details
+  Future<Map<String, dynamic>?> getVolunteerDetails(String adminId) async {
+    try {
+      final document = await FirebaseFirestore.instance.collection('Admin').doc(adminId).get();
+      if (document.exists) {
+        return document.data();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('Error fetching volunteer details: $e');
+      rethrow;
+    }
+  }
+final volunteerDetailsProvider = FutureProvider.autoDispose
+    .family<Map<String, dynamic>?, String>((ref, adminId) async {
+  return getVolunteerDetails(adminId); // Call the function to fetch details
+});
+
+
+Future<String> fetchPlaceName(GeoPoint location) async {
+  final apiKey = "AIzaSyBzyHjj4QgqqdYjFmX3pcnfpgZ1Uc_NqYo";
+  final url =
+      "https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=$apiKey";
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data["status"] == "OK") {
+        return data["results"][0]["formatted_address"];
+      }
+    }
+    return "Unknown Location";
+  } catch (e) {
+    log("Error fetching location: $e");
+    return "Error fetching location";
+  }
+}
+
+// Create a Riverpod FutureProvider
+final placeNameProvider =
+    FutureProvider.family<String, GeoPoint>((ref, location) async {
+  return await fetchPlaceName(location);
+});
 // final nearbyReportsProvider =
 //     StreamProvider.autoDispose<List<ReportModel>>((ref) async* {
 //   final position = await ref.watch(locationProvider.future);

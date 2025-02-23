@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:dog_catcher/core/theme.dart';
 import 'package:dog_catcher/data/services/auth_service.dart';
 import 'package:dog_catcher/data/services/report_services.dart';
 import 'package:dog_catcher/presentation/auth/sign_in.dart';
-import 'package:dog_catcher/presentation/pages/chat/chat_rooms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,16 +49,7 @@ class CustomDrawer extends ConsumerWidget {
                 color: AppTheme.softPink,
               ))),
             ),
-            Card(
-                color: AppTheme.softPink,
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => ChatRooms()));
-                  },
-                  leading: Icon(Icons.chat),
-                  title: Text('Chat with Rescue Team'),
-                )),
+          
             Card(
               color: AppTheme.softPink,
               child: ListTile(

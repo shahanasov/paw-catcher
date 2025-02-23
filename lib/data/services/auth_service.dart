@@ -51,7 +51,7 @@ Future<String?> signUp({
       String? fcmToken = await FirebaseMessaging.instance.getToken();
       final userDetail = FirebaseFirestore.instance.collection("Users");
       final newUser =
-          UserModel(email: email, name: name, fcmToken: fcmToken).toJson();
+          UserModel(email: email, name: name, fcmToken: fcmToken,userId: userId).toJson();
       await userDetail.doc(userId).set(newUser);
     }
     return null; // Successful sign-up

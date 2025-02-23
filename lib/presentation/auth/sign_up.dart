@@ -83,23 +83,25 @@ class SignUpScreen extends ConsumerWidget {
           fontWeight: FontWeight.w400,
         ),
       ),
-      passwordfield(controller: passwordController, ref: ref,
-       validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Password cannot be empty';
-        }
-        if (value.length < 8) {
-          return 'Password must be at least 8 characters';
-        }
-        // Regex to check at least one letter, one number, and one special character
-        final passwordRegex = RegExp(
-            r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
-        if (!passwordRegex.hasMatch(value)) {
-          return 'Password must contain letter, number & special character';
-        }
-        return null;
-      },
-       ),
+      passwordfield(
+        controller: passwordController,
+        ref: ref,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'Password cannot be empty';
+          }
+          if (value.length < 8) {
+            return 'Password must be at least 8 characters';
+          }
+          // Regex to check at least one letter, one number, and one special character
+          final passwordRegex = RegExp(
+              r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+          if (!passwordRegex.hasMatch(value)) {
+            return 'Password must contain letter, number & special character';
+          }
+          return null;
+        },
+      ),
       SizedBox(
         height: 10,
       ),
@@ -109,32 +111,46 @@ class SignUpScreen extends ConsumerWidget {
                   color: AppTheme.softPink,
                 )
               : buttonforAll(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      // If form is valid, proceed with sign-up
-                      signUp(
-                              ref: ref,
-                              name: nameController.text.trim(),
-                              email: controller.text.trim(),
-                              password: passwordController.text.trim())
-                          .then((user) {
-                        if (context.mounted) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => HomePage()));
-                        }
-                      }).catchError((error) {
-                        log("Error $error");
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Error: ${error.toString()}'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      });
-                    }
-                  },
+                   onPressed: () async {
+            String? errorMessage;
+            if (formKey.currentState!.validate()) {
+              ref.read(authLoadingProvider.notifier).state = true;
+
+              try {
+                errorMessage = await signUp(
+                  ref: ref,
+                  name: nameController.text.trim(),
+                  email: controller.text.trim(),
+                  password: passwordController.text.trim(),
+                );
+
+                if (errorMessage == null) {
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showErrorDialog(context, errorMessage);
+                  }
+                }
+              } catch (error) {
+                log("Error: $error");
+                if (context.mounted) {
+                  showErrorDialog(context, errorMessage??'Something went wrong. Please try again.');
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   SnackBar(
+                  //     content: Text('Something went wrong. Please try again.'),
+                  //     backgroundColor: Colors.red,
+                  //   ),
+                  // );
+                }
+              } finally {
+                ref.read(authLoadingProvider.notifier).state = false;
+              }
+            }
+          },
                   context: context,
                   hint: 'Register')),
       optsign(context, false),
